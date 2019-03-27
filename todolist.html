@@ -6,7 +6,30 @@
 </head>
 <body>
   <h2>My to do list</h2>
-  <input type="text" id = "list" size = "40px">
-  <input type="button" value="ADD">
+  <input list="search_list" id = "text" size = "40px">
+  <datalist id="search_list">
+      
+  </datalist>
+
+  <input type="button" value="ADD" onclick="add_list()">
+
+  <script>
+    let options = new Array();
+
+    function add_list(){
+      let list_value = document.querySelector("#text").value;
+
+      let options_single = '';
+      options_single += '<option value = "'+list_value+'">';
+      options.push(options_single);
+
+      let options_multi = '';
+      for(let i = 0; i < options.length ; i++){
+        options_multi += options[i];
+      }
+      document.getElementById('search_list').innerHTML =options_multi;
+    }
+  </script>
+
 </body>
 </html>
