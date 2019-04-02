@@ -3,31 +3,51 @@
 <head>
   <meta charset="utf-8">
   <title>TodoList</title>
+  <link rel="stylesheet" href="todolist.css" type="text/css">
 </head>
 <body>
   <h2>My to do list</h2>
-  <input list="search_list" id = "text" size = "40px">
-  <datalist id="search_list">
-      
-  </datalist>
+  <input type = "text" class = "all_text" id = "input_text">
+  <input type="button" value="ADD" style = "height:35px" onclick="add_list()">
+  <div id = "new_text_area"></div>
+  <!-- <input type="button" id = "del_button"value="DELETE" onclick="del_list()"> -->
 
-  <input type="button" value="ADD" onclick="add_list()">
 
   <script>
-    let options = new Array();
+    let text_arr = new Array();
+    
 
     function add_list(){
-      let list_value = document.querySelector("#text").value;
+      let text_value = document.getElementById("input_text").value;
 
-      let options_single = '';
-      options_single += '<option value = "'+list_value+'">';
-      options.push(options_single);
+      let new_text = '';
+      new_text += '<input type = "text" class = "new_text" value = "'+text_value+'"><br>';
+      text_arr.push(new_text);
 
-      let options_multi = '';
-      for(let i = 0; i < options.length ; i++){
-        options_multi += options[i];
+      let text_stick = '';
+      for ( let i = 0 ; i < text_arr.length ; i ++){
+        text_stick += text_arr[i];
       }
-      document.getElementById('search_list').innerHTML =options_multi;
+      document.getElementById("new_text_area").innerHTML = text_stick;
+      
+
+      
+      // let new_text = document.createElement("INPUT");
+      // let br1 = document.createElement("br");
+      // new_text.setAttribute("type","text");
+      // new_text.setAttribute("value",text_value);
+      // new_text.setAttribute("class","all_text");
+      // new_text.setAttribute("id","text_list");
+      // new_text.appendChild(br1);
+
+
+      //document.body.appendChild(new_text);
+
+      //options.push(text_value);
+    }
+
+    function del_list(){
+
     }
   </script>
 
