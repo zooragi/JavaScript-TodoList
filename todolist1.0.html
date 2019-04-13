@@ -5,14 +5,15 @@
         <link rel="stylesheet" href="todolist1.0.css">
     </head>
     <body>
+        <script src = "todolist1.0.js"></script>
         <div class = "App-entire">
             <header id = "title"><h1>Todo App</h1></header>
             <div class = "App-body">
-                <input type="text" id = "input-text">
+                <input type="text" id = "input-text" onkeyup="enterkey()">
                 <div class = "App-list">
-                    <ul>
-                        <li class = "list-unit">
-                            <input type="checkbox" id = "check1">
+                    <ul id = "full-list">
+                        <!-- <li class = "list-unit">
+                            <input type="checkbox" id = "check1" onKeyDown="onKeyDown();">
                             <label for="check1" ><del>CSS 공부</del></label>
                             <span class = "list-button">
                                 <input type="button" class = "button-unit" value="Edit">
@@ -43,12 +44,11 @@
                                 <input type="button" class = "button-unit" value="Edit">
                                 <input type="button" class = "button-unit" value="Delete">
                             </span>
-                        </li>
+                        </li> -->
                     </ul>
 
                 </div>
             </div>
         </div>
-
     </body>
 </html>
