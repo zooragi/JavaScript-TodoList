@@ -1,38 +1,57 @@
-    let list_count = 0;
-    let list_unit = new Array();
+let listCount = 0;
+let listUnit = new Array();
+let listMap = new Map();
 
-    let checkbox_list = document.getElementsByName(checkbox_list);
-    for(let i = 0; i <checkbox_list.length ; i++){
-        if(checkbox_list[i].checked==true){
-            document.write(111);
+function addList(value){
+    mapSetting("<li class='list-unit'>"+addCheckbox(value)+addDelEditButton()+"</li>")
+    rendering();
+}
+function mapSetting(value){
+    listMap.set(String(listCount),value);
+}
+function rendering(){
+    let totalList = "";
+    for( let value of listMap.values()){
+        totalList += value;
+    }
+    document.getElementById("full-list").innerHTML = totalList;
+}
+function addCheckbox(value){
+    let checkbox = '<input type="checkbox" name="checkBoxList" id="check'+listCount+'" >\
+    <label for="check'+listCount+'" >'+value+'</label>';
+    return checkbox;
+}
+function addDelEditButton(){
+    let button = "<span class='list-button'> \
+    <input type='button' class='button-unit' value='Edit'  onclick = 'editButtonClick(this.id);' id='button"+listCount+"'> \
+    <input type='button' class='button-unit' value='Delete' onclick='delButtonClick(this.id);' id='button"+listCount+"'></span>";
+    return button;
+}
+function editButtonClick(btnId){
+    
+}
+function delButtonClick(btnId){
+    let btnIdTemp = btnId;
+    let delId;
+    for(let i = 0 ; i < btnIdTemp.length ; i++){
+        if(isNaN(btnIdTemp[i]) == false){
+            delId = btnIdTemp[i];
+            let a = listMap.delete(String(delId));
+            rendering();
+            listCount--;
         }
     }
-    function add_list(value){
-        let total_list = "";
-        list_unit.push("<li class = 'list-unit'>"+add_checkbox(value)+add_del_edit_button()+"</li>");
-        for( let i= 0; i < list_unit.length ; i++){
-            total_list += list_unit[i];
-        }
-        document.getElementById("full-list").innerHTML = total_list;
-    }
-    function add_checkbox(value){
-        let checkbox = '<input type="checkbox" name = "checkox_list" id = "check'+list_count+'"><label for="check'+list_count+'" >'+value+'</label>';
-        return checkbox;
-    }
-    function add_del_edit_button(){
-        let button = "<span class = 'list-button'> <input type='button' class = 'button-unit' value='Edit'> <input type='button' class = 'button-unit' value='Delete'></span>";
-        return button;
-    }
-    function enterkey() {
-        if (window.event.keyCode == 13) {
-            let text_value = document.getElementById("input-text").value;
-            if(text_value == "")
-                alert("내용을 입력하시오.");
-            else{
-                add_list(text_value);
-                list_count ++;
-                
-            }
+}
+function enterkey() {
+    if (window.event.keyCode == 13) {
+        let textValue = document.getElementById("input-text").value;
+        if(textValue == "")
+            alert("내용을 입력하시오.");
+        else{
+            addList(textValue);
+            listCount ++;
+            document.getElementById("input-text").value="";
+            
         }
     }
-
+}
