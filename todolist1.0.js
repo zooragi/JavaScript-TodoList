@@ -1,12 +1,22 @@
     let list_count = 0;
-    let total_list = "";
+    let list_unit = new Array();
+
+    let checkbox_list = document.getElementsByName(checkbox_list);
+    for(let i = 0; i <checkbox_list.length ; i++){
+        if(checkbox_list[i].checked==true){
+            document.write(111);
+        }
+    }
     function add_list(value){
-        total_list += "<li class = 'list-unit'>"+add_checkbox(value)+add_del_edit_button()+"</li>";
+        let total_list = "";
+        list_unit.push("<li class = 'list-unit'>"+add_checkbox(value)+add_del_edit_button()+"</li>");
+        for( let i= 0; i < list_unit.length ; i++){
+            total_list += list_unit[i];
+        }
         document.getElementById("full-list").innerHTML = total_list;
-        
     }
     function add_checkbox(value){
-        let checkbox = '<input type="checkbox" id = "check'+list_count+'"><label for="check'+list_count+'" >'+value+'</label>';
+        let checkbox = '<input type="checkbox" name = "checkox_list" id = "check'+list_count+'"><label for="check'+list_count+'" >'+value+'</label>';
         return checkbox;
     }
     function add_del_edit_button(){
@@ -24,4 +34,5 @@
                 
             }
         }
-}
+    }
+
