@@ -1,0 +1,43 @@
+header{
+    text-align: center;
+}
+.slide-entire{
+    height: 200px;
+    border-top : 1px solid #000;
+    border-bottom : 1px solid #000;
+}
+.slide-body{
+    text-align: center;
+    height: 90%;
+    width : 50%;
+    margin: 0 auto;
+    padding-top:10px;
+    padding-bottom:10px;
+
+}
+.image-list{
+    padding:10px;
+    width: 50%;
+    height: 90%;
+}
+#image-button-left:hover,#image-button-right:hover{
+    opacity: 1;
+}
+#image-button-left{
+    position: relative;
+    bottom:50%;
+    background: #ffff;
+    border-style: solid;
+    border-width: 20px 40px 20px 0;
+    border-color: transparent #9400D3;
+    opacity: 0.6;
+}
+#image-button-right{
+    position: relative;
+    bottom:50%;
+    background: #ffff;
+    border-style: solid;
+    border-width: 20px 0 20px 40px;
+    border-color: transparent #9400D3;
+    opacity: 0.6;
+}
