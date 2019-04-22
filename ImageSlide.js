@@ -10,10 +10,13 @@
     function imgGallery(){
         const imgList= ["aaa.jpg","bbb.jpg","ccc.jpg","ddd.jpg"];
         const imgBox = qs(".img-box");
+        const radioPage = qs(".page-radio-bundle");
         
+
         function init(){
             bindEvents();
-            rendering(imgList[numberInit]);
+            radioEvents();
+            rendering(numberInit);
         }
 
         function imageView(img){
@@ -21,19 +24,34 @@
                 <img class="image-list" src="${img}" alt="image">
             `;
         }
-        function rendering(){
-            imgBox.innerHTML = imageView(imgList[numberInit]);
+        function makeRadio(){
+            let radioHtml = "";
+            for(let i = 0; i < imgList.length ; i++){
+                radioHtml += `<input type="radio" name="p-Radio" class="page-radio ">`;
+            } 
+            return radioHtml;  
+        }
+        function rendering(a){
+            imgBox.innerHTML = imageView(imgList[a]);
+            radioPage.innerHTML = makeRadio();
         }
 
         function bindEvents(){
             qs("#image-button-left").addEventListener("click",e=>{
                 numberInit = (numberInit-1+imgList.length) % imgList.length
-                rendering();
+                rendering(numberInit);
             });
             qs("#image-button-right").addEventListener("click",e=>{
                 numberInit = (numberInit + 1) % imgList.length;
-                rendering();
+                rendering(numberInit);
             });
+        }
+
+        function radioEvents(){
+            let $radioClass = document.querySelectorAll(".page-radio");
+            for(let i = 0; i < $radioClass.length ; i++){
+                $radioClass[i].onclick()
+            }
         }
 
         init();
