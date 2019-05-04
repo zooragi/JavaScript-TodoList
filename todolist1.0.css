@@ -3,15 +3,21 @@ ul{
     margin:0px; padding:0px;
 }
 html{
-    padding : 100px 350px 100px 350px;
+    width: 100%;
+    height: 100%;
+    /* padding : 100px 350px 100px 350px; */
     background : #ddd;
 }
-#title{
+#main-title{
     text-align: center;
 }
 .App-entire{
-    border:1px solid #000;
+    position:relative;
+    left:50%;
+    transform: translateX(-50%);
+    width:500px;
     height:544px;
+    border:1px solid #000;
     background: #fff;
 }
 .App-body{
@@ -24,12 +30,15 @@ html{
     height: 360px;
 }
 .list-unit{
+    position:relative;
     border-bottom:1px solid #000;
     padding : 7px;
 
 }
 .list-button{
-    float:right;
+    position: absolute;
+    top: 16px;
+    right: 10px;
 }
 .button-unit{
     text-align: center;
@@ -42,29 +51,29 @@ html{
     border:none;
     border-bottom:1px solid #000;
 }
-input[type=checkbox] { 
-    position: absolute; 
-    left : -1000%;
+input[type="checkbox"] { 
+    position: absolute;
+    left:15px;
+    width:1px;
+    height:1px;
 }
-input[type=checkbox] + label{
-    position:relative;
-    
-}
-input[type=checkbox] + label:before{
+.checkbox-circle:before{
     content:"";
     display:inline-block;
+    position: relative;
     width : 30px;
     height : 30px;
     border : 1px solid #000;
     border-radius: 50%;
     vertical-align: middle;
     margin:5px;
-    transition : all 0.2s;
+    transition : all 0.5s;
 
 }
-input[type=checkbox]:checked + label:before{
+input[type="checkbox"]:checked + .checkbox-circle:before {
     content:"\2713";
     text-align: center;
     font-size: 25px;
+    line-height: 1.2;
     
 }
