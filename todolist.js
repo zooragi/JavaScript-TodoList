@@ -2,16 +2,26 @@
     "use strict"
 
     const qs = select => document.querySelector(select);
-    let listMap = new Map();    
     let listCount = 0;
     const BTN_KIND_SAVE = "save";
     const BTN_KIND_EDIT = "edit";
+    let listData = [];
+    let localStorageData;
+    let totalListHtml = "";
 
     function todoListApp(){
 
         function init(){
+            if(JSON.parse(localStorage.getItem("data")) !== null){
+                listData = JSON.parse(localStorage.getItem("data"));
+            }
+
+            rendering();
             enterkey();
             listClickEvent();
+            listAllCheck();
+            listAllCheckClear();
+            listAlleDelete();
         }
 
         // EnterKey
@@ -21,8 +31,13 @@
                 if (window.event.keyCode === 13) {
                     if(textValue === "")
                         alert("내용을 입력하시오.");
-                    else{
-                        mapSetting(textValue,String(listCount));
+                    else {
+                        listData.push({
+                            id : listCount,
+                            value : textValue,
+                            btnKind : BTN_KIND_EDIT,
+                            check : false
+                        });
                         listCount ++;
                         qs("#input-text").value="";
                         rendering();
@@ -32,36 +47,42 @@
             
 
         }
-        //map stting
-        function mapSetting(value,listId){
-            let liInnerHtml = "<li class='list-unit'>"+addCheckbox(value,listId)+addDelEditButton("edit",listId)+"</li>";
-            listMap.set(listId,liInnerHtml);
+        
+        function liTagHtml(value,listId,btnKind,checkedState){
+            if(btnKind === BTN_KIND_SAVE){
+                return `<li class='list-unit'>${addCheckBoxAndText(value,listId,checkedState)}${addDelEditButton(btnKind,listId)}</li>`;
+            }
+            return `<li class='list-unit'>${addCheckbox(value,listId,checkedState)}${addDelEditButton(btnKind,listId)}</li>`;
+
         }
+
+        function listHtmlCombine(){
+            totalListHtml = "";
+            listData.forEach(item=>{
+                totalListHtml +=liTagHtml(item.value, item.id, item.btnKind, item.check );
+            });
+            return totalListHtml;
+        }
+
         //list refresh
         function rendering(){
-            let totalList = "";
-            for( let value of listMap.values()){
-                totalList += value;
-            }
-            qs("#full-list").innerHTML = totalList;
+            localStorage.setItem("data",JSON.stringify(listData));
+            listHtmlCombine();
+            qs("#full-list").innerHTML = totalListHtml;
         }
+
         //Add checkbox add
-        function addCheckbox(value,chkId){
+        function addCheckbox(value,chkId,checkedState){
             return `<label class="check-label" >
-            <input type="checkbox" name="checkBoxList" class="chk" id=${chkId}>
-            <span class="checkbox-circle">${value}</span></label>`;
-        }
-        function addCheckedbox(value,chkId){
-            return `<label class="check-label" >
-            <input type="checkbox" name="checkBoxList" class="chk" id=${chkId} checked>
-            <span class="checkbox-circle">${value}</span></label>`;
+            <input type="checkbox" name="checkBoxList" class="chk" ${checkedState === true ? "checked" : ""}>
+            <span class="checkbox-circle" id=${chkId}>${value}</span></label>`;
         }
 
         //Add checkbox and input text
         function addCheckBoxAndText(text,chkId){
             return `<label class="check-label">
-            <input type="checkbox" name="checkBoxList" id=${chkId}>
-            <span class="checkbox-circle"></span>
+            <input type="checkbox" name="checkBoxList" >
+            <span class="checkbox-circle" id=${chkId}></span>
             </label> 
             <input type="text" id="input-checkbox-text" value=${text} autofocus>`;
 
@@ -77,31 +98,52 @@
             let ulItem = qs("#full-list");
             ulItem.addEventListener("click",e=>{
                 let targetId = idSearch(e.target.id);
+                let indexId = listData.map(x => x.id).indexOf(Number(targetId));
                 if (e.target.id === `del${targetId}`){
-                    listMap.delete(targetId);
+                    listData.splice(indexId,1);
                     rendering();
                 } else if (e.target.id === `edit${targetId}`){
-                    let preText = e.target.parentNode.parentNode.children[0].children[1].textContent;
-                    listMap.set(targetId,`<li class='list-unit'>${addCheckBoxAndText(preText,targetId)}
-                    ${addDelEditButton(BTN_KIND_SAVE,targetId)}</li>`);
+                    listData[indexId].btnKind = BTN_KIND_SAVE;
                     rendering();
                 } else if (e.target.id === `save${targetId}`){
                     let editText = qs("#input-checkbox-text").value;
-                    listMap.set(targetId,`<li class='list-unit'>${addCheckbox(editText,targetId)}
-                    ${addDelEditButton(BTN_KIND_EDIT,targetId)}</li>`);
+                    listData[indexId].value = editText;
+                    listData[indexId].btnKind = BTN_KIND_EDIT;
                     rendering();
-                }  else if (e.target.parentNode.className ==="check-label"){
-                    let textValue = e.target.parentNode.children[1].textContent;
-                    let chkItem = document.getElementById(targetId);
-                    if(chkItem.checked){
-                        listMap.set(targetId,`<li class='list-unit'>${addCheckedbox(textValue,targetId)}
-                        ${addDelEditButton(BTN_KIND_EDIT,targetId)}</li>`);
-                    } else{
-                        listMap.set(targetId,`<li class='list-unit'>${addCheckbox(textValue,targetId)}
-                        ${addDelEditButton(BTN_KIND_EDIT,targetId)}</li>`);
-                    }
-                
+                }  
+                else if (e.target.parentNode.children[0].className ==="chk"){
+                    listData[indexId].check === true ? listData[indexId].check = false : listData[indexId].check = true;
                 }
+                //eventFactory(e.target.id,targetId,indexId);
+                //console.log(e.target.className);
+
+            });
+        }
+
+        function eventFactory(eTargetId,targetId,indexId){
+
+        }
+
+        function listAllCheck(){
+            qs("#entire-checked").addEventListener("click",e=>{
+                listData.forEach(item => {
+                    item.check = true;
+                });
+                rendering();
+            });
+        }
+        function listAllCheckClear(){
+            qs("#entire-checked-clear").addEventListener("click",e=>{
+                listData.forEach(item=>{
+                    item.check = false;
+                });
+                rendering();
+            });
+        }
+        function listAlleDelete(){
+            qs("#entire-delete").addEventListener("click",e=>{
+                listData = [];
+                rendering();
             });
         }
 
@@ -115,6 +157,17 @@
                 }
             }
             return buttonNumber;
+        }
+        function objClone(obj){
+            if (obj === null || typeof(obj) !=="object") return obj;
+            let copy = obj.constructor();
+
+            for(let attr in obj){
+                if(obj.hasOwnProperty(attr)){
+                    copy[attr] = objClone(obj[attr]);
+                }
+            }
+            return copy;
         }
         init();
     }

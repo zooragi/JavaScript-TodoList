@@ -1,3 +1,4 @@
+*:focus { outline:none; }
 ul{
     list-style:none;
     margin:0px; padding:0px;
@@ -7,6 +8,11 @@ html{
     height: 100%;
     /* padding : 100px 350px 100px 350px; */
     background : #ddd;
+}
+footer{
+    position: relative;
+    top:10px;
+    text-align: center;
 }
 #main-title{
     text-align: center;
@@ -25,15 +31,19 @@ html{
     padding-right:30px;
 }
 .App-list{
-    border:1px solid #000;
+    border:1px solid rgb(168, 168, 168);
     margin-top: 20px;
     height: 360px;
+    border-radius: 4px;
 }
 .list-unit{
     position:relative;
-    border-bottom:1px solid #000;
+    border-bottom:1px solid rgb(168, 168, 168);
     padding : 7px;
 
+}
+.list-unit:hover{
+    background-color: rgb(245, 244, 243);
 }
 .list-button{
     position: absolute;
@@ -44,6 +54,16 @@ html{
     text-align: center;
     height: 20px;
     width: 50px;
+    background-color: #fff;
+    border:1px solid rgb(216, 213, 213);
+    cursor: pointer;
+    border-radius: 4px;
+}
+.button-unit:hover{
+    background-color: beige;
+}
+.button-unit:active{
+    background-color: rgb(202, 218, 116);
 }
 #input-text{
     width:100%;
@@ -70,10 +90,26 @@ input[type="checkbox"] {
     transition : all 0.5s;
 
 }
+.checkbox-circle:before:hover{
+    background-color: rgb(235, 208, 57);
+}
 input[type="checkbox"]:checked + .checkbox-circle:before {
     content:"\2713";
     text-align: center;
     font-size: 25px;
     line-height: 1.2;
     
+}
+.footer-button{
+    background-color: #fff;
+    border:1px solid rgb(216, 213, 213);
+    cursor: pointer;
+    border-radius: 4px;
+}
+.footer-button:hover{
+    background-color: beige;
+}
+.footer-button:active{
+    background-color: rgb(202, 218, 116);
+
 }
