@@ -6,23 +6,22 @@
     const BTN_KIND_SAVE = "save";
     const BTN_KIND_EDIT = "edit";
     let listData = [];
-    let data = {
-        id : "",
-        value : "",
-        btnKind : "",
-        check : false
-    };
+    let localStorageData;
     let totalListHtml = "";
 
     function todoListApp(){
 
         function init(){
+            if(JSON.parse(localStorage.getItem("data")) !== null){
+                listData = JSON.parse(localStorage.getItem("data"));
+            }
+
             rendering();
             enterkey();
             listClickEvent();
-            entireCheck();
-            entireCheckClear();
-            entireDelete();
+            listAllCheck();
+            listAllCheckClear();
+            listAlleDelete();
         }
 
         // EnterKey
@@ -32,11 +31,13 @@
                 if (window.event.keyCode === 13) {
                     if(textValue === "")
                         alert("내용을 입력하시오.");
-                    else{
-                        data.id = listCount;
-                        data.value = textValue;
-                        data.btnKind = BTN_KIND_EDIT;
-                        listData.push({...data});
+                    else {
+                        listData.push({
+                            id : listCount,
+                            value : textValue,
+                            btnKind : BTN_KIND_EDIT,
+                            check : false
+                        });
                         listCount ++;
                         qs("#input-text").value="";
                         rendering();
@@ -47,45 +48,27 @@
 
         }
         
-        function liInnerCheckBox(value,listId,btnKind,checkedState){
-            let liInnerHtml = "<li class='list-unit'>"+addCheckbox(value,listId,checkedState)+addDelEditButton(btnKind,listId)+"</li>";
-            return liInnerHtml;
-        }
+        function liTagHtml(value,listId,btnKind,checkedState){
+            if(btnKind === BTN_KIND_SAVE){
+                return `<li class='list-unit'>${addCheckBoxAndText(value,listId,checkedState)}${addDelEditButton(btnKind,listId)}</li>`;
+            }
+            return `<li class='list-unit'>${addCheckbox(value,listId,checkedState)}${addDelEditButton(btnKind,listId)}</li>`;
 
-        function liInnerCheckBoxText(value,listId,btnKind,checkedState){
-            let liInnerHtml = "<li class='list-unit'>"+addCheckBoxAndText(value,listId,checkedState)+addDelEditButton(btnKind,listId)+"</li>";
-            return liInnerHtml;
         }
 
         function listHtmlCombine(){
             totalListHtml = "";
-            for( let i = 0 ; i < listData.length ; i++ ){
-                if (listData[i].btnKind === BTN_KIND_SAVE ){
-                    totalListHtml +=liInnerCheckBoxText(listData[i].value, listData[i].id, listData[i].btnKind, listData[i].check );
-                    continue;
-                }
-                totalListHtml += liInnerCheckBox(listData[i].value, listData[i].id, listData[i].btnKind, listData[i].check );
-
-            }
+            listData.forEach(item=>{
+                totalListHtml +=liTagHtml(item.value, item.id, item.btnKind, item.check );
+            });
             return totalListHtml;
         }
+
         //list refresh
         function rendering(){
-            localStorageSetting();
+            localStorage.setItem("data",JSON.stringify(listData));
             listHtmlCombine();
             qs("#full-list").innerHTML = totalListHtml;
-        }
-
-        function localStorageSetting(){
-            if(listData.length <= 0 && localStorage.getItem("data") === "null"){
-                return;
-            } else if ( listData.length <= 0 ){
-                listData = JSON.parse(localStorage.getItem("data"));
-            } else { 
-                localStorage.setItem("data",JSON.stringify(listData));
-                listData = JSON.parse(localStorage.getItem("data"));
-            }
-
         }
 
         //Add checkbox add
@@ -115,35 +98,41 @@
             let ulItem = qs("#full-list");
             ulItem.addEventListener("click",e=>{
                 let targetId = idSearch(e.target.id);
+                let indexId = listData.map(x => x.id).indexOf(Number(targetId));
                 if (e.target.id === `del${targetId}`){
-                    listData.splice(idFindIndex(targetId),1);
+                    listData.splice(indexId,1);
                     rendering();
                 } else if (e.target.id === `edit${targetId}`){
-                    listData[idFindIndex(targetId)].btnKind = BTN_KIND_SAVE;
+                    listData[indexId].btnKind = BTN_KIND_SAVE;
                     rendering();
                 } else if (e.target.id === `save${targetId}`){
                     let editText = qs("#input-checkbox-text").value;
-                    listData[idFindIndex(targetId)].value = editText;
-                    listData[idFindIndex(targetId)].btnKind = BTN_KIND_EDIT;
+                    listData[indexId].value = editText;
+                    listData[indexId].btnKind = BTN_KIND_EDIT;
                     rendering();
                 }  
                 else if (e.target.parentNode.children[0].className ==="chk"){
-                    let index = idFindIndex(targetId);
-                    listData[index].check === true ? listData[index].check = false : listData[index].check = true;
+                    listData[indexId].check === true ? listData[indexId].check = false : listData[indexId].check = true;
                 }
+                //eventFactory(e.target.id,targetId,indexId);
+                //console.log(e.target.className);
 
             });
         }
 
-        function entireCheck(){
+        function eventFactory(eTargetId,targetId,indexId){
+
+        }
+
+        function listAllCheck(){
             qs("#entire-checked").addEventListener("click",e=>{
-                listData.forEach(item=>{
+                listData.forEach(item => {
                     item.check = true;
                 });
                 rendering();
             });
         }
-        function entireCheckClear(){
+        function listAllCheckClear(){
             qs("#entire-checked-clear").addEventListener("click",e=>{
                 listData.forEach(item=>{
                     item.check = false;
@@ -151,22 +140,12 @@
                 rendering();
             });
         }
-        function entireDelete(){
+        function listAlleDelete(){
             qs("#entire-delete").addEventListener("click",e=>{
                 listData = [];
                 rendering();
             });
         }
-
-        function idFindIndex(id){
-            let Idindex; 
-            listData.forEach((item,index)=>{
-                if(item.id === Number(id)){
-                    Idindex = index;
-                }
-            });
-            return Idindex;
-        }  
 
         //buttonId search
         function idSearch(btnId){
