@@ -11,7 +11,7 @@ html{
 }
 footer{
     position: relative;
-    top:10px;
+    top:2px;
     text-align: center;
 }
 #main-title{
@@ -22,7 +22,7 @@ footer{
     left:50%;
     transform: translateX(-50%);
     width:500px;
-    height:544px;
+    height:580px;
     border:1px solid #000;
     background: #fff;
 }
@@ -101,6 +101,7 @@ input[type="checkbox"]:checked + .checkbox-circle:before {
     
 }
 .footer-button{
+    margin: 10px 10px 1px 10px;
     background-color: #fff;
     border:1px solid rgb(216, 213, 213);
     cursor: pointer;
